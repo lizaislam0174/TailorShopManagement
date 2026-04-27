@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employees</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100">
+
+<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+<div class="lg:ml-64 min-h-screen p-6 transition-all duration-300">
+    <div class="max-w-7xl mx-auto space-y-6">
+
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-800">Employee List</h1>
+                <p class="text-sm text-slate-500 mt-1">
+                    Manage employees and their profile details in one place.
+                </p>
+            </div>
+
+            <a th:href="@{/employees/create}"
+               class="inline-flex items-center rounded-xl bg-blue-600 px-4 py-2.5 text-white font-medium shadow hover:bg-blue-700 transition">
+                + Add Employee
+            </a>
+        </div>
+
+        <!-- Overview Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h2 class="text-lg font-semibold text-slate-800">Employees Overview</h2>
+                    <p class="text-sm text-slate-500 mt-1">
+                        View and manage all employee records, contact details, and salary information.
+                    </p>
+                </div>
+
+                <div class="flex gap-3 text-sm">
+                    <div class="rounded-xl bg-slate-50 border border-slate-200 px-4 py-3">
+                        <p class="text-slate-500">Total Employees</p>
+                        <p class="text-lg font-bold text-slate-800" th:text="${#lists.size(employees)}">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-slate-50">
+                <div>
+                    <h2 class="text-lg font-semibold text-slate-800">All Employees</h2>
+                    <p class="text-sm text-slate-500">Employee records and actions</p>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm text-left text-slate-600">
+
+                    <!-- Table Head -->
+                    <thead class="bg-slate-100 text-slate-700 uppercase text-xs tracking-wide">
+                    <tr>
+                        <th class="px-5 py-4">ID</th>
+                        <th class="px-5 py-4">Name</th>
+                        <th class="px-5 py-4">Phone</th>
+                        <th class="px-5 py-4">Role</th>
+                        <th class="px-5 py-4">Salary</th>
+                        <th class="px-5 py-4">Address</th>
+                        <th class="px-5 py-4 text-center">Actions</th>
+                    </tr>
+                    </thead>
+
+                    <!-- Table Body -->
+                    <tbody class="divide-y divide-slate-200 bg-white">
+
+                    <tr th:each="employee : ${employees}" class="hover:bg-slate-50 transition">
+                        <td class="px-5 py-4 font-medium text-slate-700" th:text="${employee.id}"></td>
+
+                        <td class="px-5 py-4">
+                            <div class="font-semibold text-slate-800" th:text="${employee.name != null ? employee.name : '-'}"></div>
+                        </td>
+
+                        <td class="px-5 py-4" th:text="${employee.phone != null ? employee.phone : '-'}"></td>
+
+                        <td class="px-5 py-4">
+                            <span class="inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700"
+                                  th:text="${employee.role != null ? employee.role : '-'}">
+                            </span>
+                        </td>
+
+                        <td class="px-5 py-4 font-semibold text-emerald-600 whitespace-nowrap">
+                            ৳ <span th:text="${employee.salary != null ? #numbers.formatDecimal(employee.salary, 1, 'COMMA', 2, 'POINT') : '0.00'}"></span>
+                        </td>
+
+                        <td class="px-5 py-4 max-w-xs">
+                            <div class="truncate text-slate-500" th:text="${employee.address != null ? employee.address : '-'}"></div>
+                        </td>
+
+                        <!-- Actions -->
+                        <td class="px-5 py-4">
+                            <div class="flex flex-wrap justify-center gap-2">
+
+                                <a th:href="@{/employees/edit/{id}(id=${employee.id})}"
+                                   class="rounded-lg bg-amber-400 px-3 py-1.5 text-xs font-medium text-white hover:bg-amber-500 transition">
+                                    Edit
+                                </a>
+
+                                <a th:href="@{/employees/delete/{id}(id=${employee.id})}"
+                                   onclick="return confirm('Are you sure you want to delete this employee?')"
+                                   class="rounded-lg bg-rose-500 px-3 py-1.5 text-xs font-medium text-white hover:bg-rose-600 transition">
+                                    Delete
+                                </a>
+
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Empty State -->
+                    <tr th:if="${#lists.isEmpty(employees)}">
+                        <td colspan="7" class="px-6 py-12 text-center">
+                            <div class="flex flex-col items-center">
+                                <div class="mb-3 rounded-full bg-slate-100 p-4 text-2xl">🧵</div>
+                                <h3 class="text-base font-semibold text-slate-700">No employees found</h3>
+                                <p class="mt-1 text-sm text-slate-500">Start by adding your first employee.</p>
+
+                                <a th:href="@{/employees/create}"
+                                   class="mt-4 inline-flex items-center rounded-xl bg-blue-600 px-4 py-2 text-white font-medium shadow hover:bg-blue-700 transition">
+                                    + Add Employee
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

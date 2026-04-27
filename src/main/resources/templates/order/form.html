@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100">
+
+<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+<div class="ml-64 min-h-screen p-6">
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-800">Order Form</h1>
+                <p class="text-sm text-slate-500 mt-1">
+                    Create and manage tailoring orders with pricing, delivery, and invoice details.
+                </p>
+            </div>
+
+            <div class="flex gap-3">
+                <a th:if="${order != null and order.id != null}"
+                   th:href="@{/orders/invoice/{id}(id=${order.id})}"
+                   target="_blank"
+                   class="inline-flex items-center rounded-xl bg-emerald-600 px-4 py-2 text-white font-medium shadow hover:bg-emerald-700 transition">
+                    View Invoice
+                </a>
+
+                <a th:href="@{/orders}"
+                   class="inline-flex items-center rounded-xl bg-slate-600 px-4 py-2 text-white font-medium shadow hover:bg-slate-700 transition">
+                    Back to Orders
+                </a>
+            </div>
+        </div>
+
+        <form th:action="@{/orders/save}" method="post" class="space-y-6">
+            <input type="hidden" name="id" th:value="${order.id}">
+
+            <!-- Main Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h2 class="text-lg font-semibold text-slate-800 mb-4">Order Information</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+
+                    <!-- Customer -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Customer</label>
+                        <select name="customerId" required
+                                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select Customer</option>
+                            <option th:each="customer : ${customers}"
+                                    th:value="${customer.id}"
+                                    th:text="${customer.name}"
+                                    th:selected="${order.customer != null and order.customer.id == customer.id}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Employee -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Assigned Employee</label>
+                        <select name="employeeId"
+                                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select Employee</option>
+                            <option th:each="employee : ${employees}"
+                                    th:value="${employee.id}"
+                                    th:text="${employee.name}"
+                                    th:selected="${order.employee != null and order.employee.id == employee.id}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Dress Type -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Dress Type</label>
+                        <input type="text" name="dressType" th:value="${order.dressType}"
+                               placeholder="e.g. Shirt, Pant, Blazer"
+                               class="w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Delivery Date -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Delivery Date</label>
+                        <input type="date" name="deliveryDate" th:value="${order.deliveryDate}"
+                               class="w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Quantity -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Quantity</label>
+                        <input type="number" id="quantity" name="quantity" th:value="${order.quantity}"
+                               min="1"
+                               class="w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Status -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Status</label>
+                        <select name="status"
+                                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option th:each="status : ${statuses}"
+                                    th:value="${status}"
+                                    th:text="${status}"
+                                    th:selected="${order.status == status}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h2 class="text-lg font-semibold text-slate-800 mb-4">Pricing</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Unit Price</label>
+                        <input type="number" step="0.01" id="unitPrice" name="unitPrice" th:value="${order.unitPrice}"
+                               placeholder="0.00"
+                               class="w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Advance Amount</label>
+                        <input type="number" step="0.01" id="advanceAmount" name="advanceAmount" th:value="${order.advanceAmount}"
+                               placeholder="0.00"
+                               class="w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Total Amount</label>
+                        <input type="text" id="totalAmountDisplay" readonly
+                               class="w-full rounded-xl border border-slate-200 bg-slate-100 px-4 py-2.5 text-slate-700">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Due Amount</label>
+                        <input type="text" id="dueAmountDisplay" readonly
+                               class="w-full rounded-xl border border-slate-200 bg-slate-100 px-4 py-2.5 text-rose-600 font-semibold">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h2 class="text-lg font-semibold text-slate-800 mb-4">Additional Notes</h2>
+
+                <textarea name="notes" rows="5" th:text="${order.notes}"
+                          placeholder="Special instructions, fabric details, design notes..."
+                          class="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap gap-3">
+                <button type="submit"
+                        class="rounded-xl bg-blue-600 px-6 py-2.5 text-white font-medium shadow hover:bg-blue-700 transition">
+                    Save Order
+                </button>
+
+                <a th:href="@{/orders}"
+                   class="rounded-xl bg-slate-500 px-6 py-2.5 text-white font-medium shadow hover:bg-slate-600 transition">
+                    Cancel
+                </a>
+
+                <a th:if="${order != null and order.id != null}"
+                   th:href="@{/orders/invoice/{id}(id=${order.id})}"
+                   target="_blank"
+                   class="rounded-xl bg-emerald-600 px-6 py-2.5 text-white font-medium shadow hover:bg-emerald-700 transition">
+                    Generate Invoice
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function calculateAmounts() {
+        const quantity = parseFloat(document.getElementById('quantity')?.value) || 0;
+        const unitPrice = parseFloat(document.getElementById('unitPrice')?.value) || 0;
+        const advanceAmount = parseFloat(document.getElementById('advanceAmount')?.value) || 0;
+
+        const total = quantity * unitPrice;
+        const due = total - advanceAmount;
+
+        document.getElementById('totalAmountDisplay').value = total.toFixed(2);
+        document.getElementById('dueAmountDisplay').value = due.toFixed(2);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        ['quantity', 'unitPrice', 'advanceAmount'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', calculateAmounts);
+        });
+        calculateAmounts();
+    });
+</script>
+
+</body>
+</html>
