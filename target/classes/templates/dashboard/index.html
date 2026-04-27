@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100">
+
+<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+<div class="ml-64 min-h-screen p-6">
+    <div class="max-w-7xl mx-auto space-y-6">
+
+        <!-- Header -->
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-800">Tailor Shop Dashboard</h1>
+                <p class="text-sm text-slate-500 mt-1">
+                    Monitor customers, employees, measurements, orders, and payments from one place.
+                </p>
+            </div>
+
+            <div class="flex flex-wrap gap-3">
+                <a th:href="@{/orders/create}"
+                   class="inline-flex items-center rounded-xl bg-blue-600 px-4 py-2.5 text-white font-medium shadow hover:bg-blue-700 transition">
+                    Create Order
+                </a>
+                <a th:href="@{/payments/create}"
+                   class="inline-flex items-center rounded-xl bg-emerald-600 px-4 py-2.5 text-white font-medium shadow hover:bg-emerald-700 transition">
+                    Add Payment
+                </a>
+            </div>
+        </div>
+
+        <!-- Welcome Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <h2 class="text-xl font-semibold text-slate-800 mb-2">Welcome back</h2>
+            <p class="text-slate-600 leading-relaxed">
+                Track daily operations, manage orders, monitor deliveries,
+                and keep customer records organized.
+            </p>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-5">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 hover:shadow-md transition">
+                <p class="text-sm font-medium text-slate-500">Total Customers</p>
+                <h3 class="text-3xl font-bold text-slate-800 mt-2" th:text="${totalCustomers}">0</h3>
+                <p class="text-xs text-slate-400 mt-2">Registered customers</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 hover:shadow-md transition">
+                <p class="text-sm font-medium text-slate-500">Total Employees</p>
+                <h3 class="text-3xl font-bold text-slate-800 mt-2" th:text="${totalEmployees}">0</h3>
+                <p class="text-xs text-slate-400 mt-2">Active team members</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 hover:shadow-md transition">
+                <p class="text-sm font-medium text-slate-500">Total Orders</p>
+                <h3 class="text-3xl font-bold text-slate-800 mt-2" th:text="${totalOrders}">0</h3>
+                <p class="text-xs text-slate-400 mt-2">All recorded orders</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 hover:shadow-md transition">
+                <p class="text-sm font-medium text-slate-500">Pending Orders</p>
+                <h3 class="text-3xl font-bold text-amber-500 mt-2" th:text="${pendingOrders}">0</h3>
+                <p class="text-xs text-slate-400 mt-2">Need attention</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 hover:shadow-md transition">
+                <p class="text-sm font-medium text-slate-500">Delivered Orders</p>
+                <h3 class="text-3xl font-bold text-emerald-600 mt-2" th:text="${deliveredOrders}">0</h3>
+                <p class="text-xs text-slate-400 mt-2">Completed successfully</p>
+            </div>
+        </div>
+
+        <!-- Quick Actions + Overview -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <!-- Quick Actions -->
+            <div class="xl:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h2 class="text-lg font-semibold text-slate-800 mb-4">Quick Actions</h2>
+
+                <div class="flex flex-wrap gap-3">
+                    <a th:href="@{/customers/create}"
+                       class="rounded-xl bg-blue-600 px-5 py-2.5 text-white font-medium shadow hover:bg-blue-700 transition">
+                        Add Customer
+                    </a>
+
+                    <a th:href="@{/employees/create}"
+                       class="rounded-xl bg-slate-700 px-5 py-2.5 text-white font-medium shadow hover:bg-slate-800 transition">
+                        Add Employee
+                    </a>
+
+                    <a th:href="@{/measurements/create}"
+                       class="rounded-xl bg-violet-600 px-5 py-2.5 text-white font-medium shadow hover:bg-violet-700 transition">
+                        Add Measurement
+                    </a>
+
+                    <a th:href="@{/orders/create}"
+                       class="rounded-xl bg-amber-500 px-5 py-2.5 text-white font-medium shadow hover:bg-amber-600 transition">
+                        Create Order
+                    </a>
+
+                    <a th:href="@{/payments/create}"
+                       class="rounded-xl bg-emerald-600 px-5 py-2.5 text-white font-medium shadow hover:bg-emerald-700 transition">
+                        Add Payment
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mini Summary -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h2 class="text-lg font-semibold text-slate-800 mb-4">Today’s Focus</h2>
+
+                <div class="space-y-4">
+                    <div class="rounded-xl bg-slate-50 border border-slate-200 p-4">
+                        <p class="text-sm text-slate-500">Orders to review</p>
+                        <p class="text-2xl font-bold text-slate-800" th:text="${pendingOrders}">0</p>
+                    </div>
+
+                    <div class="rounded-xl bg-slate-50 border border-slate-200 p-4">
+                        <p class="text-sm text-slate-500">Completed deliveries</p>
+                        <p class="text-2xl font-bold text-emerald-600" th:text="${deliveredOrders}">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Optional Placeholder Sections -->
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h2 class="text-lg font-semibold text-slate-800 mb-4">Recent Orders</h2>
+                <div class="rounded-xl border border-dashed border-slate-300 p-6 text-center text-slate-400">
+                    Add your recent orders table here
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h2 class="text-lg font-semibold text-slate-800 mb-4">Recent Payments</h2>
+                <div class="rounded-xl border border-dashed border-slate-300 p-6 text-center text-slate-400">
+                    Add your recent payments table here
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

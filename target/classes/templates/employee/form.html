@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100">
+
+<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+<div class="ml-64 min-h-screen p-6">
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-800">Employee Form</h1>
+                <p class="text-sm text-slate-500 mt-1">
+                    Create and manage employee information for your tailoring shop.
+                </p>
+            </div>
+
+            <div class="flex gap-3">
+                <a th:href="@{/employees}"
+                   class="inline-flex items-center rounded-xl bg-slate-600 px-4 py-2 text-white font-medium shadow hover:bg-slate-700 transition">
+                    Back to Employees
+                </a>
+            </div>
+        </div>
+
+        <form th:action="@{/employees/save}" th:object="${employee}" method="post" class="space-y-6">
+            <input type="hidden" th:field="*{id}">
+
+            <!-- Employee Information -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h2 class="text-lg font-semibold text-slate-800 mb-4">Employee Information</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+
+                    <!-- Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Name</label>
+                        <input type="text" th:field="*{name}" required
+                               placeholder="Enter employee name"
+                               class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Phone -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Phone</label>
+                        <input type="text" th:field="*{phone}"
+                               placeholder="Enter phone number"
+                               class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Role -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Role</label>
+                        <input type="text" th:field="*{role}"
+                               placeholder="Enter employee role"
+                               class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Salary -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Salary</label>
+                        <input type="number" step="0.01" th:field="*{salary}"
+                               placeholder="0.00"
+                               class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Address -->
+                    <div class="md:col-span-2 xl:col-span-2">
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Address</label>
+                        <input type="text" th:field="*{address}"
+                               placeholder="Enter address"
+                               class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap gap-3">
+                <button type="submit"
+                        class="rounded-xl bg-blue-600 px-6 py-2.5 text-white font-medium shadow hover:bg-blue-700 transition">
+                    Save Employee
+                </button>
+
+                <a th:href="@{/employees}"
+                   class="rounded-xl bg-slate-500 px-6 py-2.5 text-white font-medium shadow hover:bg-slate-600 transition">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

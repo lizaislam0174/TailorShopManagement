@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Customer Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100">
+
+<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+<div class="ml-64 min-h-screen p-6">
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-800">Customer Form</h1>
+                <p class="text-sm text-slate-500 mt-1">
+                    Create and manage customer details including contact and personal information.
+                </p>
+            </div>
+
+            <div class="flex gap-3">
+                <a th:href="@{/customers}"
+                   class="inline-flex items-center rounded-xl bg-slate-600 px-4 py-2 text-white font-medium shadow hover:bg-slate-700 transition">
+                    Back to Customers
+                </a>
+            </div>
+        </div>
+
+        <form th:action="@{/customers/save}" th:object="${customer}" method="post" class="space-y-6">
+            <input type="hidden" th:field="*{id}">
+
+            <!-- Customer Information -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h2 class="text-lg font-semibold text-slate-800 mb-4">Customer Information</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+
+                    <!-- Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Name</label>
+                        <input type="text" th:field="*{name}" required
+                               placeholder="Enter customer name"
+                               class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Phone -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Phone</label>
+                        <input type="text" th:field="*{phone}" required
+                               placeholder="Enter phone number"
+                               class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                        <input type="email" th:field="*{email}"
+                               placeholder="Enter email address"
+                               class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Gender -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Gender</label>
+                        <select th:field="*{gender}"
+                                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="md:col-span-2 xl:col-span-2">
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Address</label>
+                        <input type="text" th:field="*{address}"
+                               placeholder="Enter address"
+                               class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap gap-3">
+                <button type="submit"
+                        class="rounded-xl bg-blue-600 px-6 py-2.5 text-white font-medium shadow hover:bg-blue-700 transition">
+                    Save Customer
+                </button>
+
+                <a th:href="@{/customers}"
+                   class="rounded-xl bg-slate-500 px-6 py-2.5 text-white font-medium shadow hover:bg-slate-600 transition">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
