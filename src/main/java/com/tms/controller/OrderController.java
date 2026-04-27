@@ -1,6 +1,5 @@
 package com.tms.controller;
 
-import com.tms.entity.OrderStatus;
 import com.tms.entity.TailorOrder;
 import com.tms.repository.EmployeeRepository;
 import com.tms.service.CustomerService;
@@ -15,6 +14,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/orders")
+@CrossOrigin(origins = "*")
 public class OrderController {
 
     private final OrderService orderService;
@@ -49,6 +49,24 @@ public class OrderController {
             order.setEmployee(null);
         }
 
+        // Auto-generate orderNo if not provided
+        if (order.getOrderNo() == null || order.getOrderNo().isEmpty()) {
+            order.setOrderNo("ORD-" + System.currentTimeMillis());
+        }
+
+        // Set dressType from notes if provided
+        if (order.getDressType() == null && order.getNotes() != null) {
+            order.setDressType(order.getNotes());
+        }
+
+        // Fix totalAmount - use unitPrice if totalAmount sent directly
+        if (order.getUnitPrice() == null || order.getUnitPrice() == 0.0) {
+            if (order.getTotalAmount() != null) {
+                order.setUnitPrice(order.getTotalAmount());
+                order.setQuantity(1);
+            }
+        }
+
         return orderService.save(order);
     }
 
@@ -68,6 +86,10 @@ public class OrderController {
             );
         } else {
             order.setEmployee(null);
+        }
+
+        if (order.getOrderNo() == null || order.getOrderNo().isEmpty()) {
+            order.setOrderNo("ORD-" + System.currentTimeMillis());
         }
 
         return orderService.save(order);
