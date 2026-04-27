@@ -6,4 +6,4 @@ RUN ./mvnw dependency:go-offline
 COPY src ./src
 RUN ./mvnw clean package -DskipTests
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "target/tailor-shop-management-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "target/TailorShopManagement-0.0.1-SNAPSHOT.jar"]
