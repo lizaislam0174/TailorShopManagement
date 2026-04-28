@@ -37,10 +37,14 @@ public class OrderController {
     @PostMapping
     public TailorOrder create(@RequestBody TailorOrder order) {
 
-        order.setCustomer(
-                customerService.findById(order.getCustomer().getId())
-        );
+        // Set customer
+        if (order.getCustomer() != null && order.getCustomer().getId() != null) {
+            order.setCustomer(
+                    customerService.findById(order.getCustomer().getId())
+            );
+        }
 
+        // Set employee
         if (order.getEmployee() != null && order.getEmployee().getId() != null) {
             order.setEmployee(
                     employeeRepository.findById(order.getEmployee().getId()).orElse(null)
@@ -49,17 +53,16 @@ public class OrderController {
             order.setEmployee(null);
         }
 
-        // Auto-generate orderNo if not provided
-        if (order.getOrderNo() == null || order.getOrderNo().isEmpty()) {
-            order.setOrderNo("ORD-" + System.currentTimeMillis());
-        }
+        // NOTE: We REMOVED the System.currentTimeMillis() code here.
+        // The orderService.save() method will now call generateOrderNo()
+        // to create sequential numbers like ORD-000001.
 
-        // Set dressType from notes if provided
+        // Set dressType from notes if not provided
         if (order.getDressType() == null && order.getNotes() != null) {
             order.setDressType(order.getNotes());
         }
 
-        // Fix totalAmount - use unitPrice if totalAmount sent directly
+        // Fix unitPrice if only totalAmount was sent
         if (order.getUnitPrice() == null || order.getUnitPrice() == 0.0) {
             if (order.getTotalAmount() != null) {
                 order.setUnitPrice(order.getTotalAmount());
@@ -76,9 +79,11 @@ public class OrderController {
 
         order.setId(id);
 
-        order.setCustomer(
-                customerService.findById(order.getCustomer().getId())
-        );
+        if (order.getCustomer() != null && order.getCustomer().getId() != null) {
+            order.setCustomer(
+                    customerService.findById(order.getCustomer().getId())
+            );
+        }
 
         if (order.getEmployee() != null && order.getEmployee().getId() != null) {
             order.setEmployee(
@@ -88,9 +93,7 @@ public class OrderController {
             order.setEmployee(null);
         }
 
-        if (order.getOrderNo() == null || order.getOrderNo().isEmpty()) {
-            order.setOrderNo("ORD-" + System.currentTimeMillis());
-        }
+        // NOTE: We REMOVED the System.currentTimeMillis() code here as well.
 
         return orderService.save(order);
     }
