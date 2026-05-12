@@ -39,6 +39,13 @@ public class OrderService {
         orderRepository.deleteById(id);
     }
 
+    // ✅ NEW — updates only the status field, nothing else touched
+    public TailorOrder updateStatus(Long id, OrderStatus newStatus) {
+        TailorOrder order = findById(id);
+        order.setStatus(newStatus);
+        return orderRepository.save(order);
+    }
+
     public long countAll() {
         return orderRepository.count();
     }
